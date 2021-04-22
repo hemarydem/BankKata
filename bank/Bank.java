@@ -42,7 +42,7 @@ public class Bank {
                         " userName VARCHAR(255), " +
                         "solde FLOAT, " +
                         "threshold FLOAT, " +
-                        "blocked BOOLEAN NOT NULL ;");
+                        "blocked BOOLEAN NOT NULL ");
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -75,10 +75,15 @@ public class Bank {
 
     public void createNewAccount(String name, int balance, int threshold) {
         // TODO
+        Account nwAccount = new  Account(name, (float)balance, (float) threshold);
     }
 
     public String printAllAccounts() {
         // TODO
+        for (:
+             ) {
+            
+        }
 
         return "";
     }

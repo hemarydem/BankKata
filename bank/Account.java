@@ -14,8 +14,10 @@ class Account {
         this.solde = soldeMoney;
         this.threshold =  threshold;
         this.blocked = true;
+        System.out.printf(this.name);
+        System.out.printf(this.solde);
+        System.out.printf(this.threshold);
     }
-
     // Methods
     public String getName() {
         return this.name;
@@ -34,7 +36,8 @@ class Account {
     }
 
     public String toString() {
-        // TODO
-        return "";
+        String result = this.name + "|" + this.solde.toString() + "|" + this.threshold.toString();
+        System.out.printf(result);
+        return result;
     }
 }
