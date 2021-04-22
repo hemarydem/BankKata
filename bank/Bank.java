@@ -28,8 +28,16 @@ public class Bank {
 
     public Bank() {
         initDb();
-
-        // TODO
+        try (Statement s = c.createStatement()) {
+            s.executeUpdate("CREATE TABLE " + TABLE_NAME +
+                    "(table_column_title TYPE_OF_DATA column_constraints,\n" +
+                    "    next_column_title TYPE_OF_DATA column_constraints,\n" +
+                    "    table_constraint\n" +
+                    "    table_constraint\n" +
+                    "");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     private void initDb() {

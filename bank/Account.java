@@ -3,13 +3,36 @@ package bank;
 class Account {
 
     // Attributes
-    // TODO
+    public String name;
+    public Float solde;
+    public Float threshold;
+    public Boolean blocked;
 
     // Constructor
-    // TODO
+    Account (String name, float soldeMoney, float threshold) {
+        this.name;
+        this.solde;
+        this.threshold;
+        this.blocked;
+
+    }
 
     // Methods
-    // TODO
+    public String getName() {
+        return this.name;
+    }
+
+    public Float getSolde() {
+        return this.solde;
+    }
+
+    public Float addToSolde(Float money) {
+        this.solde += money;
+    }
+
+    public Float withdrawal(Float money) {
+        this.solde =  this.solde - money;
+    }
 
     public String toString() {
         // TODO
