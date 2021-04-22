@@ -28,16 +28,6 @@ public class Bank {
 
     public Bank() {
         initDb();
-        try (Statement s = c.createStatement()) {
-            s.executeUpdate("CREATE TABLE " + TABLE_NAME +
-                    "(table_column_title TYPE_OF_DATA column_constraints,\n" +
-                    "    next_column_title TYPE_OF_DATA column_constraints,\n" +
-                    "    table_constraint\n" +
-                    "    table_constraint\n" +
-                    "");
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
     }
 
     private void initDb() {
@@ -45,9 +35,17 @@ public class Bank {
             Class.forName(JDBC_DRIVER);
             c = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
             System.out.println("Opened database successfully");
-
             // TODO Init DB
-
+            try (Statement s = c.createStatement()) {
+                s.executeUpdate("CREATE TABLE " + TABLE_NAME +
+                        " id SERIAL PRIMARY KEY, "+
+                        " userName VARCHAR(255), " +
+                        "solde FLOAT, " +
+                        "threshold FLOAT, " +
+                        "blocked BOOLEAN NOT NULL ;");
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);

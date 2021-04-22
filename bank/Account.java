@@ -9,12 +9,11 @@ class Account {
     public Boolean blocked;
 
     // Constructor
-    Account (String name, float soldeMoney, float threshold) {
-        this.name;
-        this.solde;
-        this.threshold;
-        this.blocked;
-
+    public Account (String name, float soldeMoney, float threshold) {
+        this.name = name;
+        this.solde = soldeMoney;
+        this.threshold =  threshold;
+        this.blocked = true;
     }
 
     // Methods
@@ -27,11 +26,11 @@ class Account {
     }
 
     public Float addToSolde(Float money) {
-        this.solde += money;
+        return this.solde += money;
     }
 
     public Float withdrawal(Float money) {
-        this.solde =  this.solde - money;
+        return this.solde =  this.solde - money;
     }
 
     public String toString() {
