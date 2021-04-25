@@ -44,6 +44,10 @@ class Account {
         return this.blocked;
     }
 
+    public void setBlocked(boolean newStatus) {
+        this.blocked = newStatus;
+    }
+
     public int getSoldeInt() {
         return Math.round(this.solde);
     }

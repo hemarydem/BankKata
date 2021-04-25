@@ -99,22 +99,52 @@ public class Bank {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
     }
+
+    public String sqlCallQuery(String query) { // for -> SELECT ..
+        String res = "";
+        try (PreparedStatement s = c.prepareStatement(query)) {
+            ResultSet r = s.executeQuery();
+            // Getting nb colmun from meta data
+            int nbColumns = r.getMetaData().getColumnCount();
+            // while there is a next row
+            while (r.next()){
+                String[] currentRow = new String[nbColumns];
+                // For each column in the row
+                for (int i = 1 ; i <= nbColumns ; i++) {
+                    currentRow[i - 1] = r.getString(i);
+                }
+                res += Arrays.toString(currentRow);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return res;
+    }
+
 
 
     public void createNewAccount(String name, int balance, int threshold) {
         // TODO
-        Account nwAccount = new Account(name, (float) balance, (float) threshold);
-        this.lisAccounts.put(this.getAccountIndex(),nwAccount);
-        String sqlRequest = "INSERT INTO accounts(userName, solde, threshold, blocked) VALUES ('" +
-                this.lisAccounts.get(this.getAccountIndex()).getName() + "', " +
-                this.lisAccounts.get(this.getAccountIndex()).getSolde().toString() + ", " +
-                this.lisAccounts.get(this.getAccountIndex()).getThreshold().toString() + ", " +
-                this.lisAccounts.get(this.getAccountIndex()).getBlocked().toString() + ");";
-        System.out.println(sqlRequest);
-        this.sqlCallInserUpdaDele(sqlRequest);
-        this.incrgAccountIndex();
+        Boolean valid = true;
+        if( threshold > 0 || threshold > balance )
+            valid = false;
+        if(valid) {
+            Account nwAccount = new Account(name, (float) balance, (float) threshold);
+            this.lisAccounts.put(this.getAccountIndex(),nwAccount);
+            String sqlRequest = "INSERT INTO accounts(userName, solde, threshold, blocked) VALUES ('" +
+                    this.lisAccounts.get(this.getAccountIndex()).getName() + "', " +
+                    this.lisAccounts.get(this.getAccountIndex()).getSolde().toString() + ", " +
+                    this.lisAccounts.get(this.getAccountIndex()).getThreshold().toString() + ", " +
+                    this.lisAccounts.get(this.getAccountIndex()).getBlocked().toString() + ");";
+            this.sqlCallInserUpdaDele(sqlRequest);
+            this.incrgAccountIndex();
+        } else {
+            if( threshold > 0 )
+                System.out.println("\nerror: La limite de découvert ne peut pas être supérieur à 0\n");
+            if(threshold > balance)
+                System.out.println("\nerror: Le solde ne peut être inférieur à la limite de découvert\n");
+        }
     }
 
     public String printAllAccounts() {
@@ -129,10 +159,45 @@ public class Bank {
 
     public void changeBalanceByName(String name, int balanceModifier) {
         // TODO
+        for(int i = 0; i < this.getAccountIndex(); i++) {
+            if(this.lisAccounts.get(i).getName().compareTo(name) == 0) {
+                    if(this.lisAccounts.get(i).getBlocked()) {
+                    System.out.println("\nerror: Le compte est bloqué\n");
+                } else {
+                        if((this.lisAccounts.get(i).getSoldeInt() + balanceModifier) < this.lisAccounts.get(i).getThresholdInt()) {
+                            System.out.println("\nerror: la somme retirer dépasse le découvert\n");
+                        } else {
+                            this.lisAccounts.get(i).addToSolde((float) balanceModifier);
+                            this.sqlCallInserUpdaDele(
+                                    "UPDATE " +
+                                            TABLE_NAME +
+                                            " SET solde = " +
+                                            Integer.toString(this.lisAccounts.get(i).getSoldeInt()) +
+                                            " WHERE userName = '" +
+                                            name + "'"
+                            );
+                        }
+                }
+            } else {
+                System.out.println("\nerror: nom de compte non trouvé\n");
+            }
+        }
     }
 
     public void blockAccount(String name) {
         // TODO
+        for(int i = 0; i < this.getAccountIndex(); i++) {
+            if( this.lisAccounts.get(i).getName().compareTo(name) == 0) {
+                this.lisAccounts.get(i).setBlocked(true);
+                this.sqlCallInserUpdaDele(
+                        "UPDATE "+ TABLE_NAME + " SET blocked = " +
+                                this.lisAccounts.get(i).getBlocked().toString() +
+                                " WHERE userName = '" +
+                                name +"'");
+            } else {
+                System.out.println("error: nom de compte non trouvé");
+            }
+        }
     }
 
     // For testing purpose
@@ -160,7 +225,6 @@ public class Bank {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         return res;
     }
 }
