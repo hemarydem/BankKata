@@ -55,7 +55,6 @@ public class Bank {
             Class.forName(JDBC_DRIVER);
             c = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
             System.out.println("Opened database successfully");
-            // TODO Init DB
             try (Statement s = c.createStatement()) {
                 String str = "CREATE TABLE " + TABLE_NAME +
                         " (userId SERIAL PRIMARY KEY,"
@@ -101,31 +100,7 @@ public class Bank {
         }
     }
 
-    public String sqlCallQuery(String query) { // for -> SELECT ..
-        String res = "";
-        try (PreparedStatement s = c.prepareStatement(query)) {
-            ResultSet r = s.executeQuery();
-            // Getting nb colmun from meta data
-            int nbColumns = r.getMetaData().getColumnCount();
-            // while there is a next row
-            while (r.next()){
-                String[] currentRow = new String[nbColumns];
-                // For each column in the row
-                for (int i = 1 ; i <= nbColumns ; i++) {
-                    currentRow[i - 1] = r.getString(i);
-                }
-                res += Arrays.toString(currentRow);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return res;
-    }
-
-
-
     public void createNewAccount(String name, int balance, int threshold) {
-        // TODO
         Boolean valid = true;
         if( threshold > 0 || threshold > balance )
             valid = false;
@@ -158,7 +133,6 @@ public class Bank {
     }
 
     public void changeBalanceByName(String name, int balanceModifier) {
-        // TODO
         for(int i = 0; i < this.getAccountIndex(); i++) {
             if(this.lisAccounts.get(i).getName().compareTo(name) == 0) {
                     if(this.lisAccounts.get(i).getBlocked()) {
@@ -185,7 +159,6 @@ public class Bank {
     }
 
     public void blockAccount(String name) {
-        // TODO
         for(int i = 0; i < this.getAccountIndex(); i++) {
             if( this.lisAccounts.get(i).getName().compareTo(name) == 0) {
                 this.lisAccounts.get(i).setBlocked(true);
