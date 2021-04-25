@@ -2,7 +2,10 @@ package bank;
 
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Bank {
 
@@ -26,6 +29,23 @@ public class Bank {
 
     private Connection c;
 
+
+    /*
+        attribut bank
+    */
+    public HashMap<Integer,Account> lisAccounts = new HashMap<Integer, Account>();
+    private Integer AccountIndex = 0;
+
+    public HashMap<Integer,Account>  getBankAccountList() {
+        return this.lisAccounts;
+    }
+    public Integer getAccountIndex() {
+        return this.AccountIndex;
+    }
+    public void incrgAccountIndex() {
+        this.AccountIndex++;
+    }
+
     public Bank() {
         initDb();
     }
@@ -37,12 +57,14 @@ public class Bank {
             System.out.println("Opened database successfully");
             // TODO Init DB
             try (Statement s = c.createStatement()) {
-                s.executeUpdate("CREATE TABLE " + TABLE_NAME +
-                        " id SERIAL PRIMARY KEY, "+
-                        " userName VARCHAR(255), " +
+                String str = "CREATE TABLE " + TABLE_NAME +
+                        " (userId SERIAL PRIMARY KEY,"
+                +" userName VARCHAR(255), " +
                         "solde FLOAT, " +
                         "threshold FLOAT, " +
-                        "blocked BOOLEAN NOT NULL ");
+                        "blocked BOOLEAN);";
+                //System.out.println(str);
+                s.executeUpdate(str);
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -71,21 +93,38 @@ public class Bank {
             System.out.println(e.toString());
         }
     }
+    public void sqlCallInserUpdaDele(String sqlRequest) { // for -> INSERT, UPDATE, DELETE
+        try (Statement s = c.createStatement()) {
+            s.executeUpdate(sqlRequest);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+    }
 
 
     public void createNewAccount(String name, int balance, int threshold) {
         // TODO
-        Account nwAccount = new  Account(name, (float)balance, (float) threshold);
+        Account nwAccount = new Account(name, (float) balance, (float) threshold);
+        this.lisAccounts.put(this.getAccountIndex(),nwAccount);
+        String sqlRequest = "INSERT INTO accounts(userName, solde, threshold, blocked) VALUES ('" +
+                this.lisAccounts.get(this.getAccountIndex()).getName() + "', " +
+                this.lisAccounts.get(this.getAccountIndex()).getSolde().toString() + ", " +
+                this.lisAccounts.get(this.getAccountIndex()).getThreshold().toString() + ", " +
+                this.lisAccounts.get(this.getAccountIndex()).getBlocked().toString() + ");";
+        System.out.println(sqlRequest);
+        this.sqlCallInserUpdaDele(sqlRequest);
+        this.incrgAccountIndex();
     }
 
     public String printAllAccounts() {
-        // TODO
-        for (:
-             ) {
-            
+        String allAccountString = "";
+        if(this.getAccountIndex() == 0)
+            return allAccountString;
+        for(int i = 0; i < this.getAccountIndex(); i++) {
+            allAccountString = allAccountString + this.lisAccounts.get(i).toString() + "\n";
         }
-
-        return "";
+        return allAccountString;
     }
 
     public void changeBalanceByName(String name, int balanceModifier) {
@@ -98,7 +137,7 @@ public class Bank {
 
     // For testing purpose
     String getTableDump() {
-        String query = "select * from " + TABLE_NAME;
+        String query = "select userName, solde, threshold, blocked from " + TABLE_NAME;
         String res = "";
 
         try (PreparedStatement s = c.prepareStatement(query)) {

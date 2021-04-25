@@ -1,23 +1,29 @@
 package bank;
 
-class Account {
+import java.sql.Statement;
 
+class Account {
     // Attributes
-    public String name;
-    public Float solde;
-    public Float threshold;
-    public Boolean blocked;
+    private String name;
+    private Float solde;
+    private Float threshold;
+    private Boolean blocked;
 
     // Constructor
     public Account (String name, float soldeMoney, float threshold) {
         this.name = name;
         this.solde = soldeMoney;
         this.threshold =  threshold;
-        this.blocked = true;
-        System.out.printf(this.name);
-        System.out.printf(this.solde);
-        System.out.printf(this.threshold);
+        this.blocked = false;
     }
+
+    public Account (String name, float soldeMoney, float threshold, boolean blocked) {
+        this.name = name;
+        this.solde = soldeMoney;
+        this.threshold =  threshold;
+        this.blocked = blocked;
+    }
+
     // Methods
     public String getName() {
         return this.name;
@@ -25,6 +31,21 @@ class Account {
 
     public Float getSolde() {
         return this.solde;
+    }
+
+    public Float getThreshold() {
+        return this.threshold;
+    }
+    public int getThresholdInt() {
+        return Math.round(this.threshold);
+    }
+
+    public Boolean getBlocked() {
+        return this.blocked;
+    }
+
+    public int getSoldeInt() {
+        return Math.round(this.solde);
     }
 
     public Float addToSolde(Float money) {
@@ -36,7 +57,9 @@ class Account {
     }
 
     public String toString() {
-        String result = this.name + "|" + this.solde.toString() + "|" + this.threshold.toString();
+        Integer sld = this.getSoldeInt();
+        Integer Thrshld = this.getThresholdInt();
+        String result = this.name + " | " + sld.toString() + " | " + Thrshld.toString() + " | " + this.getBlocked().toString() ;
         System.out.printf(result);
         return result;
     }

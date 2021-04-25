@@ -28,6 +28,19 @@ public class BankTest {
         b.dropAllTables();
     }
 
+
+    @Test
+    public void testCreateAccountObj() {
+        Integer b = 100;
+        String expeted = "hello";
+        String expeted2 = "hello | 100 | 100 | false";
+
+        Account a = new Account("hello", 100,100);
+        assertEquals(expeted, a.getName());
+        assertEquals(expeted2, a.toString());
+
+    }
+
     @Test
     public void testCreateAccount() {
 
@@ -93,7 +106,6 @@ public class BankTest {
         assertEquals(
                 "TESTY | 90 | -100 | false\n",
                 b.printAllAccounts());
-
 
         // Check in DB
         assertEquals(
