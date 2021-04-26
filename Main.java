@@ -52,13 +52,13 @@ public class Main extends Application {
                     b.closeDb();
                     break;
                 case "0":
-                    b.printAllAccounts();
+                    System.out.println(b.printAllAccounts());
                     break;
                 case "1":
                     System.out.println("Rentrer votre nom s'il vous plait\nPour annuler et revenir au menu principal appuyer sur q puis sur entrer\n");
                     userInputName = s.nextLine();
-                    userInputName = userInputName.trim();
-                    if(userInputName.matches("^[q]$")) {
+                    userInputName = userInputName.trim();           // delete space around the sentence
+                    if(userInputName.matches("^[q]$")) {     // check if the user want stop the operation
                         stop = true;
                     }
                     if(stop)
@@ -66,14 +66,14 @@ public class Main extends Application {
                     while (!nexStep) {
                         System.out.println("rentrer votre solde\nPour annuler et revenir au menu principal appuyer sur q puis sur entrer\n");
                         userInputSolde = s.nextLine();
-                        userInputSolde.replaceAll("\\s+","");
+                        userInputSolde.replaceAll("\\s+",""); // delete all space
                         if(userInputSolde.matches("^[q]$")) {
                             stop = true;
                             nexStep = true;
-                        } else if(userInputSolde.matches("^\\d+$")) {
+                        } else if(userInputSolde.matches("^\\d+$")) { // check if the user wrote good format here positive number
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\n");
+                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\n le solde ne peut être négatif");
                         }
                     }
                     if(stop)
@@ -85,10 +85,10 @@ public class Main extends Application {
                         if(userInputthreshold.matches("^[q]$")) {
                             stop = true;
                             nexStep = true;
-                        } else if(userInputthreshold.matches("^[-]\\d+$|^0+$")) {
+                        } else if(userInputthreshold.matches("^[-]\\d+$|^0+$")) { // check if the user wrote good format here negative number or 0
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\n");
+                            System.out.println("Vous devez écrire votre chiffre negatif ou 0 soit:\nNombre -> 1\n");
                         }
                     }
                     b.createNewAccount(userInputName, Integer.parseInt(userInputSolde), Integer.parseInt(userInputthreshold));
@@ -110,10 +110,10 @@ public class Main extends Application {
                         if(userInputSolde.matches("^[q]$")) {
                             stop = true;
                             nexStep = true;
-                        } else if(userInputSolde.matches("^\\d+$|^\\d+[.]\\d+$|^[-]\\d+$|^[-]\\d+[.]\\d+$")) {
+                        } else if(userInputSolde.matches("^\\d+$|^[-]\\d+$")) { // check if the user wrote good format here posistive number or negative number
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\nPour retirer mettre - (un moins) devant le chifffre\n");
+                            System.out.println("Vous devez écrire votre chiffre positif ou négatif soit:\nNombre -> 1\nPour retirer mettre - (un moins) devant le chifffre\n");
                         }
                     }
                     if(stop)

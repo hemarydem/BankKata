@@ -5,12 +5,12 @@ import java.sql.Statement;
 class Account {
     // Attributes
     private String name;
-    private Float solde;
-    private Float threshold;
+    private Integer solde;
+    private Integer threshold;
     private Boolean blocked;
 
     // Constructor
-    public Account (String name, float soldeMoney, float threshold) {
+    public Account (String name, int soldeMoney, int threshold) {
         this.name = name;
         this.solde = soldeMoney;
         this.threshold =  threshold;
@@ -20,17 +20,14 @@ class Account {
     // Methods
     public String getName() {
         return this.name;
-    }
+    }                   // geter from here to line 33
 
-    public Float getSolde() {
+    public Integer getSolde() {
         return this.solde;
     }
 
-    public Float getThreshold() {
+    public Integer getThreshold() {
         return this.threshold;
-    }
-    public int getThresholdInt() {
-        return Math.round(this.threshold);
     }
 
     public Boolean getBlocked() {
@@ -39,21 +36,13 @@ class Account {
 
     public void setBlocked(boolean newStatus) {
         this.blocked = newStatus;
-    }
+    } // seter from here to line 41
 
-    public int getSoldeInt() {
-        return Math.round(this.solde);
-    }
-
-    public Float addToSolde(Float money) {
+    public Integer addToSolde(Integer money) {
         return this.solde += money;
     }
 
-    public String toString() {
-        Integer sld = this.getSoldeInt();
-        Integer Thrshld = this.getThresholdInt();
-        String result = this.name + " | " + sld.toString() + " | " + Thrshld.toString() + " | " + this.getBlocked().toString() ;
-        System.out.printf(result);
-        return result;
+    public String toString() { // get all object informations in a string
+        return this.name + " | " + this.getSolde().toString() + " | " + this.getThreshold().toString() + " | " + this.getBlocked().toString() ;
     }
 }

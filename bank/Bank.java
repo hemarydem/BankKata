@@ -33,9 +33,8 @@ public class Bank {
     /*
         attribut bank
     */
-    public HashMap<Integer,Account> lisAccounts = new HashMap<Integer, Account>();
-    private Integer AccountIndex = 0;
-
+    public HashMap<Integer,Account> lisAccounts = new HashMap<Integer, Account>();                      //all accounts are store in the array
+    private Integer AccountIndex = 0;                                                   // increment for each account created
     public HashMap<Integer,Account>  getBankAccountList() {
         return this.lisAccounts;
     }
@@ -55,14 +54,12 @@ public class Bank {
             Class.forName(JDBC_DRIVER);
             c = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
             System.out.println("Opened database successfully");
-            try (Statement s = c.createStatement()) {
+            try (Statement s = c.createStatement()) {                       // creat the tab
                 String str = "CREATE TABLE " + TABLE_NAME +
-                        " (userId SERIAL PRIMARY KEY,"
-                +" userName VARCHAR(255), " +
-                        "solde FLOAT, " +
-                        "threshold FLOAT, " +
+                        " (userName VARCHAR(255) PRIMARY KEY, " +
+                        "solde INTEGER, " +
+                        "threshold INTEGER, " +
                         "blocked BOOLEAN);";
-                //System.out.println(str);
                 s.executeUpdate(str);
             } catch (Exception e) {
                 System.out.println(e.toString());
@@ -92,7 +89,7 @@ public class Bank {
             System.out.println(e.toString());
         }
     }
-    public void sqlCallInserUpdaDele(String sqlRequest) { // for -> INSERT, UPDATE, DELETE
+    public void sqlCallInserUpdaDele(String sqlRequest) { //function do a sql query for -> INSERT, UPDATE, DELETE
         try (Statement s = c.createStatement()) {
             s.executeUpdate(sqlRequest);
         } catch (Exception e) {
@@ -103,27 +100,27 @@ public class Bank {
     public void createNewAccount(String name, int balance, int threshold) {
         Boolean valid = true;
 
-        if( threshold > 0 || threshold > balance )
+        if( threshold > 0 || threshold > balance )  // check if the threshold is not bigger than balance
+            valid = false;                          // and if threshold is over 0
+
+        if(this.accountsAllready(name))             // check if the account does not aleady existe
             valid = false;
 
-        if(this.accountsAllready(name))
-            valid = false;
-
-        if(name == null || name.equals(""))
+        if(name == null || name.equals(""))         // check if name is not null or empty
             valid = false;
 
         if(valid) {
-            Account nwAccount = new Account(name, (float) balance, (float) threshold);
-            this.lisAccounts.put(this.getAccountIndex(),nwAccount);
+            Account nwAccount = new Account(name, balance, threshold);                                  // build new instace
+            this.lisAccounts.put(this.getAccountIndex(),nwAccount);                                     // insert the new account in the array
             String sqlRequest = "INSERT INTO accounts(userName, solde, threshold, blocked) VALUES ('" +
                     this.lisAccounts.get(this.getAccountIndex()).getName() + "', " +
-                    this.lisAccounts.get(this.getAccountIndex()).getSolde().toString() + ", " +
+                    this.lisAccounts.get(this.getAccountIndex()).getSolde().toString() + ", " +         // builde sql request
                     this.lisAccounts.get(this.getAccountIndex()).getThreshold().toString() + ", " +
                     this.lisAccounts.get(this.getAccountIndex()).getBlocked().toString() + ");";
-            this.sqlCallInserUpdaDele(sqlRequest);
-            this.incrgAccountIndex();
+            this.sqlCallInserUpdaDele(sqlRequest);                                                      //exect the request
+            this.incrgAccountIndex();                                                                   // increment account index
         } else {
-            if( threshold > 0 )
+            if( threshold > 0 )                                                                         // error messages
                 System.out.println("\nerror: La limite de découvert ne peut pas être supérieur à 0\n");
 
             if(threshold > balance)
@@ -141,23 +138,23 @@ public class Bank {
     public String printAllAccounts() {
         String allAccountString = "";
 
-        if(this.getAccountIndex() == 0)
-            return allAccountString;
+        if(this.getAccountIndex() == 0)                 // if the index is not bigger than 0
+            return allAccountString;                    // it means there is not count created
 
         for(int i = 0; i < this.getAccountIndex(); i++) {
-            allAccountString = allAccountString + this.lisAccounts.get(i).toString() + "\n";
-        }
+            allAccountString = allAccountString + this.lisAccounts.get(i).toString() + "\n"; // concate the string
+        }                                                                                    // contains all informations
         return allAccountString;
     }
 
     public boolean accountsAllready(String nwAccount) {
-        if(this.getAccountIndex() == 0)
-            return false;
+        if(this.getAccountIndex() == 0)                 // if the index is not bigger than 0
+            return false;                               // it means there is not count created
 
         for(int i = 0; i < this.getAccountIndex(); i++) {
-            if(nwAccount.equals(this.lisAccounts.get(i).getName()))
-                return true;
-        }
+            if(nwAccount.equals(this.lisAccounts.get(i).getName())) //  if there is the same name in the array
+                return true;                                        //  method return true to not have two accounts
+        }                                                           //  with the same name
 
         return false;
     }
@@ -165,19 +162,19 @@ public class Bank {
     public void changeBalanceByName(String name, int balanceModifier) {
         for(int i = 0; i < this.getAccountIndex(); i++) {
 
-            if(this.lisAccounts.get(i).getName().compareTo(name) == 0) {
-                    if(this.lisAccounts.get(i).getBlocked()) {
+            if(this.lisAccounts.get(i).getName().compareTo(name) == 0) {          // loop to find the account
+                    if(this.lisAccounts.get(i).getBlocked()) {                     // block the operation if the account is blocked
                     System.out.println("\nerror: Le compte est bloqué\n");
                 } else {
-                        if((this.lisAccounts.get(i).getSoldeInt() + balanceModifier) < this.lisAccounts.get(i).getThresholdInt()) {
-                            System.out.println("\nerror: la somme retirer dépasse le découvert\n");
+                        if((this.lisAccounts.get(i).getSolde() + balanceModifier) < this.lisAccounts.get(i).getThreshold()) { // block the operation if
+                            System.out.println("\nerror: la somme retirer dépasse le découvert\n");                           // it get sold lower than the Threshold
                         } else {
-                            this.lisAccounts.get(i).addToSolde((float) balanceModifier);
-                            this.sqlCallInserUpdaDele(
+                            this.lisAccounts.get(i).addToSolde( balanceModifier);                       // update the object
+                            this.sqlCallInserUpdaDele(                                                  // and the database's data
                                     "UPDATE " +
                                             TABLE_NAME +
                                             " SET solde = " +
-                                            Integer.toString(this.lisAccounts.get(i).getSoldeInt()) +
+                                            Integer.toString(this.lisAccounts.get(i).getSolde()) +
                                             " WHERE userName = '" +
                                             name + "'"
                             );
@@ -190,10 +187,10 @@ public class Bank {
     }
 
     public void blockAccount(String name) {
-        for(int i = 0; i < this.getAccountIndex(); i++) {
+        for(int i = 0; i < this.getAccountIndex(); i++) {                   // loop to find the account
             if( this.lisAccounts.get(i).getName().compareTo(name) == 0) {
-                this.lisAccounts.get(i).setBlocked(true);
-                this.sqlCallInserUpdaDele(
+                this.lisAccounts.get(i).setBlocked(true);                   // update blocked status
+                this.sqlCallInserUpdaDele(                                  // update db
                         "UPDATE "+ TABLE_NAME + " SET blocked = " +
                                 this.lisAccounts.get(i).getBlocked().toString() +
                                 " WHERE userName = '" +
