@@ -70,10 +70,10 @@ public class Main extends Application {
                         if(userInputSolde.matches("^[q]$")) {
                             stop = true;
                             nexStep = true;
-                        } else if(userInputSolde.matches("^\\d+$|^\\d+[.]\\d+$")) {
+                        } else if(userInputSolde.matches("^\\d+$")) {
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1 ou nombre.nombre 1.1\n");
+                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\n");
                         }
                     }
                     if(stop)
@@ -85,10 +85,10 @@ public class Main extends Application {
                         if(userInputthreshold.matches("^[q]$")) {
                             stop = true;
                             nexStep = true;
-                        } else if(userInputthreshold.matches("^[-]\\d+$|^[-]\\d+[.]\\d+$|^0+$")) {
+                        } else if(userInputthreshold.matches("^[-]\\d+$|^0+$")) {
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1 ou nombre.nombre 1.1e\n");
+                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\n");
                         }
                     }
                     b.createNewAccount(userInputName, Integer.parseInt(userInputSolde), Integer.parseInt(userInputthreshold));
@@ -113,7 +113,7 @@ public class Main extends Application {
                         } else if(userInputSolde.matches("^\\d+$|^\\d+[.]\\d+$|^[-]\\d+$|^[-]\\d+[.]\\d+$")) {
                             nexStep = true;
                         } else {
-                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1 ou nombre.nombre 1.1\nPour retirer mettre - (un moins) devant le chifffre\n");
+                            System.out.println("Vous devez écrire votre chiffre soit:\nNombre -> 1\nPour retirer mettre - (un moins) devant le chifffre\n");
                         }
                     }
                     if(stop)

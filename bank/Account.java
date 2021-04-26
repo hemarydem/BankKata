@@ -17,13 +17,6 @@ class Account {
         this.blocked = false;
     }
 
-    public Account (String name, float soldeMoney, float threshold, boolean blocked) {
-        this.name = name;
-        this.solde = soldeMoney;
-        this.threshold =  threshold;
-        this.blocked = blocked;
-    }
-
     // Methods
     public String getName() {
         return this.name;
@@ -54,10 +47,6 @@ class Account {
 
     public Float addToSolde(Float money) {
         return this.solde += money;
-    }
-
-    public Float withdrawal(Float money) {
-        return this.solde =  this.solde - money;
     }
 
     public String toString() {

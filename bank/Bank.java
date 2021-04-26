@@ -102,8 +102,16 @@ public class Bank {
 
     public void createNewAccount(String name, int balance, int threshold) {
         Boolean valid = true;
+
         if( threshold > 0 || threshold > balance )
             valid = false;
+
+        if(this.accountsAllready(name))
+            valid = false;
+
+        if(name == null || name.equals(""))
+            valid = false;
+
         if(valid) {
             Account nwAccount = new Account(name, (float) balance, (float) threshold);
             this.lisAccounts.put(this.getAccountIndex(),nwAccount);
@@ -117,23 +125,46 @@ public class Bank {
         } else {
             if( threshold > 0 )
                 System.out.println("\nerror: La limite de découvert ne peut pas être supérieur à 0\n");
+
             if(threshold > balance)
                 System.out.println("\nerror: Le solde ne peut être inférieur à la limite de découvert\n");
+
+            if(this.accountsAllready(name))
+                System.out.println("\nerror: ce compte existe déjà trouver un autre Nom\n");
+
+            if(name == null || name.equals("")) {
+                System.out.println("\nerror: vous devez rentrer un nom de compte\n");
+            }
         }
     }
 
     public String printAllAccounts() {
         String allAccountString = "";
+
         if(this.getAccountIndex() == 0)
             return allAccountString;
+
         for(int i = 0; i < this.getAccountIndex(); i++) {
             allAccountString = allAccountString + this.lisAccounts.get(i).toString() + "\n";
         }
         return allAccountString;
     }
 
+    public boolean accountsAllready(String nwAccount) {
+        if(this.getAccountIndex() == 0)
+            return false;
+
+        for(int i = 0; i < this.getAccountIndex(); i++) {
+            if(nwAccount.equals(this.lisAccounts.get(i).getName()))
+                return true;
+        }
+
+        return false;
+    }
+
     public void changeBalanceByName(String name, int balanceModifier) {
         for(int i = 0; i < this.getAccountIndex(); i++) {
+
             if(this.lisAccounts.get(i).getName().compareTo(name) == 0) {
                     if(this.lisAccounts.get(i).getBlocked()) {
                     System.out.println("\nerror: Le compte est bloqué\n");

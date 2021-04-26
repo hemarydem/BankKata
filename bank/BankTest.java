@@ -42,6 +42,23 @@ public class BankTest {
     }
 
     @Test
+    public void testCreateAccountDoublon() {
+        b.createNewAccount("TESTY", 100, -100);
+        b.createNewAccount("TESTY", 200, -300);
+        assertEquals(
+                "TESTY | 100 | -100 | false\n",
+                b.printAllAccounts());
+    }
+    @Test
+    public void testCreateAccountEmpty() {
+        b.createNewAccount("", 100, -100);
+        assertEquals(
+                "",
+                b.printAllAccounts());
+    }
+
+
+    @Test
     public void testCreateAccount() {
 
         b.createNewAccount("TESTY", 100, -100);
@@ -59,6 +76,7 @@ public class BankTest {
                 "[TESTY, 100, -100, f]" +
                         "[TESTYTEST, 200, -300, f]",
                 b.getTableDump());
+
     }
 
     @Test
